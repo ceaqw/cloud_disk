@@ -1,0 +1,31 @@
+version: 1.0.0
+service:
+  port: 8000
+  host: 0.0.0.0
+models:
+  # redis集群master主机列表
+  redis:
+    addrs: 
+      - 127.0.0.1:6379
+      - host:port
+    password: ''
+    cluster_mode: false
+    dial_timeout: 1000
+    read_timeout: 1000
+    write_timeout: 1000
+  maindb:
+    host: 127.0.0.1
+    port: 3306
+    username: root
+    password: root
+    database: spider
+    charset: utf8
+    driver: mysql
+jwt: 
+  time_out: 60
+  issuer: ceaqw
+logger:
+  log_path: /log
+  log_name: log_info
+base:
+  page_size: 20
