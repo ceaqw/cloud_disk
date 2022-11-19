@@ -9,6 +9,12 @@ type Response struct {
 	Data   interface{} `json:"data"`   //返回数据
 }
 
+type ResponseCheckToken struct {
+	Success bool        `json:"success"` // 返回状态值
+	Msg     string      `json:"msg"`     //返回的提示语
+	Data    interface{} `json:"data"`    //返回数据
+}
+
 // Success 正确返回
 func Success(data interface{}, msg ...string) *Response {
 	response := Response{
@@ -96,4 +102,22 @@ func OK(c *gin.Context, data ...interface{}) {
 	}
 	c.JSON(200, response)
 	return
+}
+
+func CheckTokenSuccess(data interface{}) *ResponseCheckToken {
+	responseCheckToken := ResponseCheckToken{
+		Success: true,
+		Msg:     "验证成功",
+		Data:    data,
+	}
+	return &responseCheckToken
+}
+
+func CheckTokenError() *ResponseCheckToken {
+	responseCheckToken := ResponseCheckToken{
+		Success: false,
+		Msg:     "验证失败",
+		Data:    nil,
+	}
+	return &responseCheckToken
 }
