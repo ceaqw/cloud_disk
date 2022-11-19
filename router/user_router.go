@@ -11,6 +11,6 @@ func InitUserRouter(router *gin.RouterGroup) {
 	dashBoardRouter := router.Group("/file")
 
 	{
-		dashBoardRouter.POST("/getfile", userController.GetUser)
+		dashBoardRouter.POST("/login", userController.Login)
 	}
 }

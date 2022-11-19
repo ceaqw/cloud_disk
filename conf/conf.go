@@ -1,6 +1,7 @@
 package conf
 
 import (
+	"fmt"
 	"os"
 	"time"
 
@@ -42,6 +43,20 @@ type RedisCfg struct {
 	WriteTimeout time.Duration
 }
 
+type MainDbCfg struct {
+	UserName string
+	Password string
+	Database string
+	Host     string
+	Port     string
+	Driver   string
+}
+
+type JwtCfg struct {
+	TimeOut time.Duration
+	Issuer  string
+}
+
 func GetAppCfg() (appCfg AppCfg) {
 	appCfg.Port = viper.GetString("service.port")
 	appCfg.Host = viper.GetString("service.host")
@@ -56,4 +71,20 @@ func GetRedisCfg() (redisCfg RedisCfg) {
 	redisCfg.ReadTimeout = viper.GetDuration("models.redis.read_timeout")
 	redisCfg.WriteTimeout = viper.GetDuration("models.redis.write_timeout")
 	return redisCfg
+}
+
+func GetDbCfgByName(dbName string) (mainDbCfg MainDbCfg) {
+	mainDbCfg.UserName = viper.GetString(fmt.Sprintf("models.%s.username", dbName))
+	mainDbCfg.Password = viper.GetString(fmt.Sprintf("models.%s.password", dbName))
+	mainDbCfg.Database = viper.GetString(fmt.Sprintf("models.%s.database", dbName))
+	mainDbCfg.Host = viper.GetString(fmt.Sprintf("models.%s.host", dbName))
+	mainDbCfg.Port = viper.GetString(fmt.Sprintf("models.%s.port", dbName))
+	mainDbCfg.Driver = viper.GetString(fmt.Sprintf("models.%s.driver", dbName))
+	return mainDbCfg
+}
+
+func GetJwtCfg() (jwtCfg JwtCfg) {
+	jwtCfg.TimeOut = viper.GetDuration("jwt.time_out")
+	jwtCfg.Issuer = viper.GetString("jwt.issuer")
+	return jwtCfg
 }
