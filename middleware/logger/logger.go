@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"SpiderWeb/conf"
+	"CouldDisk/conf"
 	"fmt"
 	"os"
 	"path"
