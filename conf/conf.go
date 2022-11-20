@@ -43,6 +43,10 @@ type RedisCfg struct {
 	WriteTimeout time.Duration
 }
 
+type LoggerCfg struct {
+	LogPath string
+	LogName string
+}
 type MainDbCfg struct {
 	UserName string
 	Password string
@@ -87,4 +91,10 @@ func GetJwtCfg() (jwtCfg JwtCfg) {
 	jwtCfg.TimeOut = viper.GetDuration("jwt.time_out")
 	jwtCfg.Issuer = viper.GetString("jwt.issuer")
 	return jwtCfg
+}
+
+func GetLoggerCfg() (loggerCfg LoggerCfg) {
+	loggerCfg.LogPath = viper.GetString("logger.log_path")
+	loggerCfg.LogName = viper.GetString("logger.log_name")
+	return loggerCfg
 }
