@@ -23,7 +23,7 @@
 					<el-input
 						prefix-icon="el-icon-mobile-phone"
 						v-model="registerForm.telephone"
-						placeholder="手机号"
+						placeholder="邮箱"
 					></el-input>
 				</el-form-item>
 				<el-form-item prop="password">
@@ -31,6 +31,14 @@
 						prefix-icon="el-icon-lock"
 						v-model="registerForm.password"
 						placeholder="密码"
+						show-password
+					></el-input>
+				</el-form-item>
+				<el-form-item prop="re_password">
+					<el-input
+						prefix-icon="el-icon-lock"
+						v-model="registerForm.re_password"
+						placeholder="确认密码"
 						show-password
 					></el-input>
 				</el-form-item>
@@ -100,12 +108,22 @@ export default {
 	name: 'Register',
 	components: { DragVerify },
 	data() {
+		let validatePass2 = (_, value, callback) => {
+			if (value === '') {
+				callback(new Error('请再次输入密码'))
+			} else if (value !== this.registerForm.password) {
+				callback(new Error('两次输入密码不一致!'))
+			} else {
+				callback()
+			}
+		}
 		return {
 			// 注册表单
 			registerForm: {
 				telephone: '',
 				username: '',
-				password: ''
+				password: '',
+				re_password: ''
 			},
 			// 注册表单校验规则
 			registerFormRules: {
@@ -120,6 +138,9 @@ export default {
 						message: '长度在 5 到 20 个字符',
 						trigger: 'blur'
 					}
+				],
+				re_password: [
+					{ required: true, validator: validatePass2, trigger: 'blur' }
 				],
 				telephone: [
 					{ required: true, message: '请输入手机号', trigger: 'blur' },

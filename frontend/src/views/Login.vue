@@ -16,7 +16,7 @@
 					<el-input
 						prefix-icon="el-icon-mobile-phone"
 						v-model="loginForm.telephone"
-						placeholder="手机"
+						placeholder="邮箱"
 					></el-input>
 				</el-form-item>
 				<el-form-item prop="password">
