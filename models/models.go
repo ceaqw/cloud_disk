@@ -18,7 +18,8 @@ func InitMainDb() {
 	mainDbConf := conf.GetDbCfgByName("maindb")
 	jdbc := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		mainDbConf.UserName, mainDbConf.Password, mainDbConf.Host, mainDbConf.Port, mainDbConf.Database)
-	MainDb, err := xorm.NewEngine(mainDbConf.Driver, jdbc)
+	var err error
+	MainDb, err = xorm.NewEngine(mainDbConf.Driver, jdbc)
 	if err != nil {
 		panic(fmt.Sprintf("maindb newEngine error: %#v\n", err.Error()))
 	}

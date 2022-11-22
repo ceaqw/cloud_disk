@@ -27,3 +27,18 @@ func (s UserService) Login(email string, password string) (bool, string, *models
 	//数据存储到redis中
 	return true, token, user
 }
+
+func (s UserService) Register(name, email, password string) (bool, string) {
+	if s.userModel.GetUserByEmail(email) != nil {
+		return false, "该邮箱已经被注册"
+	}
+	user_basic := models.UserBasic{}
+	user_basic.Password = string(gotool.BcryptUtils.Generate(password))
+	user_basic.Email = email
+	user_basic.Name = name
+	err := s.userModel.AddUser(user_basic)
+	if err != nil {
+		return false, "注册失败"
+	}
+	return true, "注册成功"
+}

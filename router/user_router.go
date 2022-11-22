@@ -8,10 +8,11 @@ import (
 
 func InitUserRouter(router *gin.RouterGroup) {
 	userController := new(controller.User)
-	dashBoardRouter := router.Group("/file")
+	dashBoardRouter := router.Group("/user")
 
 	{
 		dashBoardRouter.POST("/login", userController.Login)
-		dashBoardRouter.GET("/checkuserlogininfo", userController.Login)
+		dashBoardRouter.POST("/register", userController.Register)
+		dashBoardRouter.GET("/checkuserlogininfo", userController.CheckUserLoginInfo)
 	}
 }

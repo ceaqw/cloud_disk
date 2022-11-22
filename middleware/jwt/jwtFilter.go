@@ -24,5 +24,7 @@ func inSquareRequest() []string {
 	//一下是放行的请求
 	//放行登录请求
 	req = append(req, "/login")
+	req = append(req, "/checkuserlogininfo")
+	req = append(req, "/register")
 	return req
 }

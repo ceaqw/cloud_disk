@@ -2,7 +2,6 @@ package router
 
 import (
 	"CouldDisk/middleware/jwt"
-	"CouldDisk/middleware/logger"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,8 +11,8 @@ func Init() *gin.Engine {
 	// 身份验证
 	router.Use(jwt.JWTAuth())
 	// 日志记录
-	router.Use(logger.LoggerToFile())
-	baseRouter := router.Group("/controller")
+	// router.Use(logger.LoggerToFile())
+	baseRouter := router.Group("/")
 	{
 		InitFileRouter(baseRouter)
 		InitUserRouter(baseRouter)

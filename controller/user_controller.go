@@ -5,6 +5,7 @@ import (
 	"CouldDisk/models/req"
 	"CouldDisk/models/resp"
 	"CouldDisk/services"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -17,7 +18,7 @@ type User struct {
 
 func (u User) Login(c *gin.Context) {
 	loginBody := req.LoginBody{}
-	if c.BindJSON(loginBody) != nil {
+	if c.BindJSON(&loginBody) == nil {
 		result := make(map[string]interface{})
 		login, token, user := u.userService.Login(loginBody.Email, loginBody.Password)
 		if login {
@@ -34,22 +35,46 @@ func (u User) Login(c *gin.Context) {
 }
 
 func (u User) CheckUserLoginInfo(c *gin.Context) {
-	token := c.Query("token")
+	token := c.Request.Header.Get("token")
 	if token == "" {
 		c.JSON(http.StatusOK, resp.CheckTokenError())
+		return
 	}
 	s := strings.Split(token, " ")
 	if len(s) < 2 {
 		c.JSON(http.StatusOK, resp.CheckTokenError())
+		return
 	}
 	j := jwt.NewJWT()
 	// parseToken 解析token包含的信息
 	claims, err := j.ParseToken(s[1])
 	if err != nil {
 		c.JSON(http.StatusOK, resp.CheckTokenError())
+		return
 	}
 	data := make(map[string]interface{})
 	data["username"] = claims.UserInfo.Name
 	data["userid"] = claims.UserInfo.Id
 	c.JSON(http.StatusOK, resp.CheckTokenSuccess(data))
+}
+
+func (u User) Register(c *gin.Context) {
+	name := c.PostForm("name")
+	fmt.Println(name)
+	registerBody := req.RegisterBody{}
+	if c.BindJSON(&registerBody) == nil {
+		fmt.Println(registerBody)
+		isRegister, msg := u.userService.Register(registerBody.Name, registerBody.Email, registerBody.Password)
+		if isRegister {
+			resp.OK(c)
+		} else {
+			c.JSON(200, resp.ErrorResp(500, msg))
+		}
+	} else {
+		resp.ParamError(c)
+	}
+}
+
+func (u User) SendVerificationCode(c *gin.Context) {
+
 }
