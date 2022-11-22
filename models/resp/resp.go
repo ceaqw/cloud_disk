@@ -15,6 +15,12 @@ type ResponseCheckToken struct {
 	Data    interface{} `json:"data"`    //返回数据
 }
 
+type ResponseBool struct {
+	Success bool        `json:"success"` // 返回状态值
+	Msg     string      `json:"msg"`     //返回的提示语
+	Data    interface{} `json:"data"`    //返回数据
+}
+
 // Success 正确返回
 func Success(data interface{}, msg ...string) *Response {
 	response := Response{
@@ -120,4 +126,13 @@ func CheckTokenError() *ResponseCheckToken {
 		Data:    nil,
 	}
 	return &responseCheckToken
+}
+
+func BoolResponse(ok bool, msg string) *ResponseBool {
+	responseBool := ResponseBool{
+		Success: ok,
+		Msg:     msg,
+		Data:    nil,
+	}
+	return &responseBool
 }

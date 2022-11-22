@@ -59,17 +59,11 @@ func (u User) CheckUserLoginInfo(c *gin.Context) {
 }
 
 func (u User) Register(c *gin.Context) {
-	name := c.PostForm("name")
-	fmt.Println(name)
 	registerBody := req.RegisterBody{}
 	if c.BindJSON(&registerBody) == nil {
 		fmt.Println(registerBody)
 		isRegister, msg := u.userService.Register(registerBody.Name, registerBody.Email, registerBody.Password)
-		if isRegister {
-			resp.OK(c)
-		} else {
-			c.JSON(200, resp.ErrorResp(500, msg))
-		}
+		c.JSON(200, resp.BoolResponse(isRegister, msg))
 	} else {
 		resp.ParamError(c)
 	}
