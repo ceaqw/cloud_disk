@@ -21,7 +21,7 @@ import (
 
 type UserBasic struct {
 	Id       uint64    `xorm:"pk autoincr" json:"id"`
-	Name     string    `xorm:"varchar(255) notnull unique" json:"name"`
+	Name     string    `xorm:"varchar(255) notnull " json:"name"`
 	Password string    `xorm:"varchar(255)" json:"password"`
 	Email    string    `xorm:"varchar(255)" json:"email"`
 	Identity string    `xorm:"varchar(255)" json:"identity"`
@@ -30,17 +30,25 @@ type UserBasic struct {
 	Deleted  time.Time `xorm:"created " json:"deleted_at"`
 }
 
+func (UserBasic) TableName() string {
+	return "user_basic"
+}
+
 type UserOrm struct {
 }
 
 func (u UserOrm) GetUserByEmail(email string) *UserBasic {
-	user := &UserBasic{}
+	user := UserBasic{}
 	ok, err := MainDb.Where("email = ?", email).Get(&user)
 	if err != nil {
 		gotool.Logs.ErrorLog().Println(err)
 	}
 	if ok {
-		return user
+		return &user
 	}
 	return nil
+}
+func (u UserOrm) AddUser(user UserBasic) error {
+	_, err := MainDb.InsertOne(user)
+	return err
 }
