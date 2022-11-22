@@ -12,17 +12,17 @@
 				label-width="100px"
 				hide-required-asterisk
 			>
-				<el-form-item prop="username">
+				<el-form-item prop="name">
 					<el-input
 						prefix-icon="el-icon-user"
-						v-model="registerForm.username"
+						v-model="registerForm.name"
 						placeholder="用户名"
 					></el-input>
 				</el-form-item>
-				<el-form-item prop="telephone">
+				<el-form-item prop="email">
 					<el-input
 						prefix-icon="el-icon-mobile-phone"
-						v-model="registerForm.telephone"
+						v-model="registerForm.email"
 						placeholder="邮箱"
 					></el-input>
 				</el-form-item>
@@ -94,6 +94,7 @@
 import CanvasNest from 'canvas-nest.js'
 import DragVerify from '_c/common/DragVerify.vue' //  引入滑动解锁组件
 import { addUser } from '_r/user.js'
+import { isEmail } from '_u/validate.js'
 
 // 配置
 const config = {
@@ -117,17 +118,24 @@ export default {
 				callback()
 			}
 		}
+		let validateEmail = (_, value, callback) => {
+			if (!isEmail(value)) {
+				callback(new Error('邮箱格式错误'))
+			} else {
+				callback()
+			}
+		}
 		return {
 			// 注册表单
 			registerForm: {
-				telephone: '',
-				username: '',
+				email: '',
+				name: '',
 				password: '',
 				re_password: ''
 			},
 			// 注册表单校验规则
 			registerFormRules: {
-				username: [
+				name: [
 					{ required: true, message: '请输入用户名', trigger: 'blur' }
 				],
 				password: [
@@ -142,9 +150,9 @@ export default {
 				re_password: [
 					{ required: true, validator: validatePass2, trigger: 'blur' }
 				],
-				telephone: [
-					{ required: true, message: '请输入手机号', trigger: 'blur' },
-					{ min: 11, max: 11, message: '请输入11位手机号', trigger: 'blur' }
+				email: [
+					{ required: true, message: '邮箱不能为空', trigger: 'blur' },
+					{ validator: validateEmail, trigger: 'blur' }
 				]
 			},
 			isShowDragVerify: false, //  页面宽度小于 768px 时，滑动解锁是否显示
@@ -161,10 +169,10 @@ export default {
 	},
 	watch: {
 		//  滑动解锁验证通过时，若重新输入手机号、用户名或密码，滑动解锁恢复原样
-		'registerForm.telephone'() {
+		'registerForm.email'() {
 			this.resetVerifyPassing()
 		},
-		'registerForm.username'() {
+		'registerForm.name'() {
 			this.resetVerifyPassing()
 		},
 		'registerForm.password'() {
@@ -202,8 +210,8 @@ export default {
 		updateIsPassing(isPassing) {
 			if (isPassing) {
 				//  校验手机号
-				this.$refs.registerForm.validateField('telephone', (telephoneError) => {
-					if (telephoneError) {
+				this.$refs.registerForm.validateField('email', (emailError) => {
+					if (emailError) {
 						// 校验未通过
 						if (this.screenWidth > 768) {
 							this.registerBtnDisabled = true
