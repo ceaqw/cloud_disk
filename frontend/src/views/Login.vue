@@ -12,10 +12,10 @@
 				label-width="100px"
 				hide-required-asterisk
 			>
-				<el-form-item prop="telephone">
+				<el-form-item prop="email">
 					<el-input
 						prefix-icon="el-icon-mobile-phone"
-						v-model="loginForm.telephone"
+						v-model="loginForm.email"
 						placeholder="邮箱"
 					></el-input>
 				</el-form-item>
@@ -79,6 +79,7 @@
 import CanvasNest from 'canvas-nest.js'
 import DragVerify from '_c/common/DragVerify.vue' //  引入滑动解锁组件
 import { login } from '_r/user.js'
+import { isEmail } from '_u/validate.js'
 
 // 配置
 const config = {
@@ -93,16 +94,24 @@ export default {
 	name: 'Login',
 	components: { DragVerify },
 	data() {
+		let validateEmail = (_, value, callback) => {
+			if (!isEmail(value)) {
+				callback(new Error('邮箱格式错误'))
+			} else {
+				callback()
+			}
+		}
 		return {
 			// 登录表单数据
 			loginForm: {
-				telephone: '',
+				email: '',
 				password: ''
 			},
 			// 登录表单验证规则
 			loginFormRules: {
-				telephone: [
-					{ required: true, message: '请输入手机号', trigger: 'blur' }
+				email: [
+					{ required: true, message: '邮箱不能为空', trigger: 'blur' },
+					{ validator: validateEmail, trigger: 'blur' }
 				],
 				password: [
 					{ required: true, message: '请输入密码', trigger: 'blur' },
@@ -134,7 +143,7 @@ export default {
 	},
 	watch: {
 		//  滑动解锁验证通过时，若重新输入用户名或密码，滑动解锁恢复原样
-		'loginForm.telephone'() {
+		'loginForm.email'() {
 			this.resetVerifyPassing()
 		},
 		'loginForm.password'() {
