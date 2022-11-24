@@ -6,7 +6,6 @@ import (
 	"CouldDisk/models/response"
 	"errors"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -20,7 +19,7 @@ func JWTAuth() gin.HandlerFunc {
 		if doSquare(c) {
 			return
 		}
-		token := c.Request.Header.Get("Authorization")
+		token := c.Request.Header.Get("token")
 		if token == "" {
 			c.JSON(http.StatusOK, gin.H{
 				"status": 401,
@@ -29,18 +28,18 @@ func JWTAuth() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		s := strings.Split(token, " ")
-		if len(s) < 2 {
-			c.JSON(http.StatusOK, gin.H{
-				"status": 401,
-				"msg":    "无效的token",
-			})
-			c.Abort()
-			return
-		}
+		// s := strings.Split(token, " ")
+		// if len(s) < 2 {
+		// 	c.JSON(http.StatusOK, gin.H{
+		// 		"status": 401,
+		// 		"msg":    "无效的token",
+		// 	})
+		// 	c.Abort()
+		// 	return
+		// }
 		j := NewJWT()
 		// parseToken 解析token包含的信息
-		claims, err := j.ParseToken(s[1])
+		claims, err := j.ParseToken(token)
 		if err != nil {
 			c.JSON(http.StatusOK, gin.H{
 				"status": 401,
@@ -51,6 +50,7 @@ func JWTAuth() gin.HandlerFunc {
 		}
 		// 继续交由下一个路由处理,并将解析出的信息传递下去
 		c.Set("claims", claims)
+		c.Set("userId", claims.UserInfo.Id)
 	}
 }
 

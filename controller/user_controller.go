@@ -7,7 +7,6 @@ import (
 	"CouldDisk/services"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,7 +21,7 @@ func (u User) Login(c *gin.Context) {
 		result := make(map[string]interface{})
 		login, token, user := u.userService.Login(loginBody.Email, loginBody.Password)
 		if login {
-			result["toekn"] = token
+			result["token"] = token
 			result["userid"] = user.Id
 			result["name"] = user.Name
 			c.JSON(200, resp.Success(result))
@@ -40,14 +39,9 @@ func (u User) CheckUserLoginInfo(c *gin.Context) {
 		c.JSON(http.StatusOK, resp.CheckTokenError())
 		return
 	}
-	s := strings.Split(token, " ")
-	if len(s) < 2 {
-		c.JSON(http.StatusOK, resp.CheckTokenError())
-		return
-	}
 	j := jwt.NewJWT()
 	// parseToken 解析token包含的信息
-	claims, err := j.ParseToken(s[1])
+	claims, err := j.ParseToken(token)
 	if err != nil {
 		c.JSON(http.StatusOK, resp.CheckTokenError())
 		return

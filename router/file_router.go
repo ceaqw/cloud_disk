@@ -11,6 +11,6 @@ func InitFileRouter(router *gin.RouterGroup) {
 	dashBoardRouter := router.Group("/file")
 
 	{
-		dashBoardRouter.POST("/getfile", fileController.GetFile)
+		dashBoardRouter.GET("/getfilelist", fileController.GetFileList)
 	}
 }

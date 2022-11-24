@@ -30,6 +30,7 @@ func InitMainDb() {
 	MainDb.ShowSQL(true)
 	err = MainDb.Sync(
 		new(UserBasic),
+		new(FileBasic),
 	)
 	if err != nil {
 		panic(fmt.Sprintf("maindb sync error: %#v\n", err.Error()))

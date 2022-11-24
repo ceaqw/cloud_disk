@@ -4,9 +4,9 @@ import "github.com/gin-gonic/gin"
 
 // Response 数据返回结构体
 type Response struct {
-	Status int         `json:"status"` // 返回状态值
-	Msg    string      `json:"msg"`    //返回的提示语
-	Data   interface{} `json:"data"`   //返回数据
+	Success bool        `json:"success"` // 返回状态值
+	Msg     string      `json:"msg"`     //返回的提示语
+	Data    interface{} `json:"data"`    //返回数据
 }
 
 type ResponseCheckToken struct {
@@ -24,9 +24,9 @@ type ResponseBool struct {
 // Success 正确返回
 func Success(data interface{}, msg ...string) *Response {
 	response := Response{
-		Status: 200,
-		Data:   data,
-		Msg:    "操作成功",
+		Success: true,
+		Data:    data,
+		Msg:     "操作成功",
 	}
 	if len(msg) > 0 {
 		response.Msg = msg[0]
@@ -37,16 +37,16 @@ func Success(data interface{}, msg ...string) *Response {
 // ErrorResp 错误返回
 func ErrorResp(data ...interface{}) *Response {
 	response := Response{
-		Status: 500,
-		Msg:    "操作失败",
-		Data:   nil,
+		Success: false,
+		Msg:     "操作失败",
+		Data:    nil,
 	}
 	for _, value := range data {
 		switch value.(type) {
 		case string:
 			response.Msg = value.(string)
-		case int:
-			response.Status = value.(int)
+		// case int:
+		// 	response.Status = value.(int)
 		case interface{}:
 			response.Data = value.(interface{})
 		}
@@ -56,16 +56,16 @@ func ErrorResp(data ...interface{}) *Response {
 
 func Error(c *gin.Context, data ...interface{}) {
 	response := Response{
-		Status: 500,
-		Msg:    "操作失败",
-		Data:   nil,
+		Success: false,
+		Msg:     "操作失败",
+		Data:    nil,
 	}
 	for _, value := range data {
 		switch value.(type) {
 		case string:
 			response.Msg = value.(string)
-		case int:
-			response.Status = value.(int)
+		// case int:
+		// 	response.Status = value.(int)
 		case interface{}:
 			response.Data = value.(interface{})
 		}
@@ -75,16 +75,16 @@ func Error(c *gin.Context, data ...interface{}) {
 }
 func ParamError(c *gin.Context, data ...interface{}) {
 	response := Response{
-		Status: 500,
-		Msg:    "参数绑定异常",
-		Data:   nil,
+		Success: false,
+		Msg:     "参数绑定异常",
+		Data:    nil,
 	}
 	for _, value := range data {
 		switch value.(type) {
 		case string:
 			response.Msg = value.(string)
-		case int:
-			response.Status = value.(int)
+		// case int:
+		// 	response.Status = value.(int)
 		case interface{}:
 			response.Data = value.(interface{})
 		}
@@ -94,9 +94,9 @@ func ParamError(c *gin.Context, data ...interface{}) {
 }
 func OK(c *gin.Context, data ...interface{}) {
 	response := Response{
-		Status: 200,
-		Msg:    "操作成功",
-		Data:   nil,
+		Success: true,
+		Msg:     "操作成功",
+		Data:    nil,
 	}
 	for _, datum := range data {
 		switch datum.(type) {
