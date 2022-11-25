@@ -8,10 +8,10 @@ type FileService struct {
 	fileModel models.FileOrm
 }
 
-func (f FileService) GetFileList(path string, page, pageSize int) (int, []interface{}) {
+func (f FileService) GetFileList(path string, page, pageSize, userid int) (int, []interface{}) {
 	var results []interface{}
 	var total int = 0
-	fb := f.fileModel.GetFileByPath(path, page, pageSize)
+	fb := f.fileModel.GetFileByPath(path, page, pageSize, userid)
 	for _, value := range *fb {
 		result := make(map[string]interface{})
 		if value.IsDir == 1 {

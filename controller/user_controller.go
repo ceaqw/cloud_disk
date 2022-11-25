@@ -62,7 +62,3 @@ func (u User) Register(c *gin.Context) {
 		resp.ParamError(c)
 	}
 }
-
-func (u User) SendVerificationCode(c *gin.Context) {
-
-}

@@ -30,9 +30,9 @@ func (FileBasic) TableName() string {
 type FileOrm struct {
 }
 
-func (f FileOrm) GetFileByPath(path string, page, pageSize int) *[]FileBasic {
+func (f FileOrm) GetFileByPath(path string, page, pageSize, userid int) *[]FileBasic {
 	var files []FileBasic
-	err := MainDb.Where("parent_path = ?", path).Limit(pageSize, page*pageSize).Find(&files)
+	err := MainDb.Where("parent_path = ?", path).And("user_id = ?", userid).Limit(pageSize, page*pageSize).Find(&files)
 	if err != nil {
 		gotool.Logs.ErrorLog().Println(err)
 	}

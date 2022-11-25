@@ -16,6 +16,7 @@ func Init() *gin.Engine {
 	{
 		InitFileRouter(baseRouter)
 		InitUserRouter(baseRouter)
+		InitTransferRouter(baseRouter)
 	}
 	return router
 }
