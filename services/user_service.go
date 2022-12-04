@@ -3,6 +3,7 @@ package services
 import (
 	"CouldDisk/middleware/jwt"
 	"CouldDisk/models"
+	"CouldDisk/utils"
 
 	"github.com/druidcaesa/gotool"
 )
@@ -41,4 +42,14 @@ func (s UserService) Register(name, email, password string) (bool, string) {
 		return false, "注册失败"
 	}
 	return true, "注册成功"
+}
+
+func (s UserService) UpdatePwdByEmail(email, password, verifyCode string) bool {
+	ok := utils.CheckVerifyCode(email, verifyCode)
+	if ok {
+		crypassword := string(gotool.BcryptUtils.Generate(password))
+		b := s.userModel.UpdatePwdByEmail(email, crypassword)
+		return b
+	}
+	return false
 }

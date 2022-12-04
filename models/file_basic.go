@@ -38,3 +38,43 @@ func (f FileOrm) GetFileByPath(path string, page, pageSize, userid int) *[]FileB
 	}
 	return &files
 }
+func (f FileOrm) GetShareFileByPath(path string, page, pageSize, userid int) *[]FileBasic {
+	var files []FileBasic
+	err := MainDb.Where("parent_path = ?", path).And("user_id = ?", userid).And("share_type = ?", 1).Limit(pageSize, page*pageSize).Find(&files)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+	}
+	return &files
+}
+func (f FileOrm) GetFileListByType(filetype, page, pageSize, userid int) *[]FileBasic {
+	typeArray := make(map[int]string)
+	typeArray[1] = "jpg"
+	typeArray[2] = "txt"
+	typeArray[3] = "video"
+	typeArray[4] = "music"
+	typeArray[4] = "other"
+	var files []FileBasic
+	err := MainDb.Where("ext = ?", typeArray[filetype]).And("user_id = ?", userid).Limit(pageSize, page*pageSize).Find(&files)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+	}
+	return &files
+}
+
+func (f FileOrm) GetRecoveryFileList(userid int) *[]FileBasic {
+	var files []FileBasic
+	err := MainDb.Where("delete = ?", 1).And("user_id = ?", userid).Find(&files)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+	}
+	return &files
+}
+
+func (f FileOrm) GetAllFile(userid int) *[]FileBasic {
+	var files []FileBasic
+	err := MainDb.Where("user_id = ?", userid).Find(&files)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+	}
+	return &files
+}

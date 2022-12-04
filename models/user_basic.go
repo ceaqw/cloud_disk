@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/druidcaesa/gotool"
@@ -51,4 +52,15 @@ func (u UserOrm) GetUserByEmail(email string) *UserBasic {
 func (u UserOrm) AddUser(user UserBasic) error {
 	_, err := MainDb.InsertOne(user)
 	return err
+}
+
+func (u UserOrm) UpdatePwdByEmail(email, pwd string) bool {
+
+	affected, err := MainDb.Exec("update user_basic set password = ? where email = ?", pwd, email)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		return false
+	}
+	fmt.Println(affected)
+	return true
 }

@@ -13,8 +13,8 @@ func (t TransferService) GetStorageInfosById(id int) interface{} {
 		result["storageSize"] = 0
 		result["totalStorageSize"] = 0
 	} else {
-		result["storageSize"] = storage.StorageSpace
-		result["totalStorageSize"] = storage.UseSpace
+		result["storageSize"] = storage.UseSpace
+		result["totalStorageSize"] = storage.StorageSpace
 	}
 	return result
 }

@@ -14,5 +14,7 @@ func InitUserRouter(router *gin.RouterGroup) {
 		dashBoardRouter.POST("/login", userController.Login)
 		dashBoardRouter.POST("/register", userController.Register)
 		dashBoardRouter.GET("/checkuserlogininfo", userController.CheckUserLoginInfo)
+		dashBoardRouter.GET("/sendcode", userController.SendCode)
+		dashBoardRouter.GET("/updatepwdbyemail", userController.UpdatePwdByEmail)
 	}
 }

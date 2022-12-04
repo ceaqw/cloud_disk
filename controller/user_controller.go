@@ -5,6 +5,7 @@ import (
 	"CouldDisk/models/req"
 	"CouldDisk/models/resp"
 	"CouldDisk/services"
+	"CouldDisk/utils"
 	"fmt"
 	"net/http"
 
@@ -60,5 +61,27 @@ func (u User) Register(c *gin.Context) {
 		c.JSON(200, resp.BoolResponse(isRegister, msg))
 	} else {
 		resp.ParamError(c)
+	}
+}
+
+func (u User) UpdatePwdByEmail(c *gin.Context) {
+	email := c.Query("email")
+	verifyCode := c.Query("verifyCode")
+	newPwd := c.Query("newPwd")
+	b := u.userService.UpdatePwdByEmail(email, newPwd, verifyCode)
+	if b {
+		c.JSON(200, resp.Success(nil))
+	} else {
+		c.JSON(200, resp.ErrorResp())
+	}
+}
+
+func (u User) SendCode(c *gin.Context) {
+	email := c.Query("email")
+	err := utils.SendVerifyCode(email)
+	if err != nil {
+		c.JSON(200, resp.ErrorResp(err))
+	} else {
+		c.JSON(200, resp.Success(nil))
 	}
 }
